@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FIES Analytics — Philippine Income Inequality System</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/static/css/style.css"/>
+<link rel="stylesheet" href="https://cloudflare.com"/>
+</head>
+<body>
+<div id="particles"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">F</div>
+    <div class="logo-text"><span>FIES</span> Analytics</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">MAIN</div>
+    <div class="nav-item active" data-page="home"><span class="nav-icon">⌂</span><span class="nav-label">Home</span></div>
+    <div class="nav-item" data-page="dashboard"><span class="nav-icon">◈</span><span class="nav-label">Dashboard</span></div>
+    <div class="nav-section">ANALYSIS</div>
+    <div class="nav-item" data-page="explorer"><span class="nav-icon">⬡</span><span class="nav-label">Rate Explorer</span></div>
+    <div class="nav-item" data-page="burden"><span class="nav-icon">▦</span><span class="nav-label">Burden Analysis</span></div>
+    <div class="nav-item" data-page="regions"><span class="nav-icon">◉</span><span class="nav-label">Regional Profile</span></div>
+    <div class="nav-section">TOOLS</div>
+    <div class="nav-item" data-page="simulator"><span class="nav-icon">⚙</span><span class="nav-label">Formula Simulator</span></div>
+    <div class="nav-item" data-page="export"><span class="nav-icon">↓</span><span class="nav-label">Export Data</span></div>
+    <div class="nav-section">INFO</div>
+    <div class="nav-item" data-page="about"><span class="nav-icon">◎</span><span class="nav-label">About the Study</span></div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="collapse-btn" id="collapseBtn">⇤</button>
+  </div>
+</aside>
+
+<header class="topbar" id="topbar">
+  <div class="page-title" id="pageTitle">Home</div>
+  <div class="topbar-right">
+    <div class="data-badge" id="healthBadge">Connecting...</div>
+    <div class="live-badge"><div class="status-dot" id="statusDot"></div><span id="statusText">Loading</span></div>
+    <div id="clock">--:--:--</div>
+  </div>
+</header>
+
+<main class="main" id="main">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <h1 class="hero-title">Philippine Family Income<br><span class="accent">Inequality Rate of Change</span><br>Analysis System</h1>
+      <p class="hero-sub">Applying numerical methods to quantify how fast household expenditure changes across income levels in all 17 Philippine regions using the 2015 PSA FIES dataset.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="navigate('dashboard')">Explore Dashboard</button>
+        <button class="btn-ghost" onclick="navigate('simulator')">Try Formula Simulator</button>
+        <button class="btn-ghost" onclick="navigate('about')">About the Research</button>
+      </div>
+    </div>
+    <div class="glow-line"></div>
+    <div class="section-title">Key Statistics</div>
+    <div class="section-sub">2015 PSA FIES — NATIONAL OVERVIEW</div>
+    <div class="grid-4" id="homeKpis">
+      <div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div>
+      <div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div>
+    </div>
+    <div class="grid-3" id="homeKpis2">
+      <div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div>
+    </div>
+    <div class="glow-line"></div>
+    <div class="section-title">Research Overview</div>
+    <div class="section-sub">METHODOLOGY AND SCOPE</div>
+    <div class="grid-3">
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Objective</div><div class="panel-sub">WHAT THIS STUDY DOES</div></div></div><p class="panel-text">Quantify the rate of household expenditure change across income brackets using the Central Difference Formula, and compute cumulative expenditure burden per region using the Trapezoidal Rule — applied to the 2015 PSA FIES dataset.</p></div>
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Dataset</div><div class="panel-sub">DATA SOURCE</div></div></div><p class="panel-text">2015 PSA Family Income and Expenditure Survey — 41,544 household records, 60 variables, 17 administrative regions. Sourced from the Philippine Statistics Authority and verified by the research team.</p></div>
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Novel Contribution</div><div class="panel-sub">WHAT'S NEW</div></div></div><p class="panel-text">First application of numerical differentiation and integration methods to Philippine FIES data — producing rate-based insights no prior descriptive study has generated on this dataset.</p></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="page" id="page-dashboard">
+    <div class="section-title">Dashboard Overview</div>
+    <div class="section-sub">NATIONAL EXPENDITURE ANALYSIS — ALL 17 REGIONS · REAL-TIME FROM PYTHON API</div>
+    <div class="grid-4" id="dashKpis"><div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div></div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Expenditure Curves</div><div class="panel-sub">NATIONAL AVERAGE PER INCOME BRACKET</div></div>
+          <div class="controls" style="margin:0">
+            <button class="ctrl-btn active" id="expBtnFood" onclick="switchExpCat('food')">Food</button>
+            <button class="ctrl-btn" id="expBtnEducation" onclick="switchExpCat('education')">Education</button>
+            <button class="ctrl-btn" id="expBtnMedical" onclick="switchExpCat('medical')">Medical</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="expCurveChart" height="200"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Rate of Change</div><div class="panel-sub">CENTRAL DIFFERENCE FORMULA — f'(xi)</div></div>
+          <div class="controls" style="margin:0">
+            <button class="ctrl-btn active" id="rateBtnFood" onclick="switchRateCat('food')">Food</button>
+            <button class="ctrl-btn" id="rateBtnEducation" onclick="switchRateCat('education')">Education</button>
+            <button class="ctrl-btn" id="rateBtnMedical" onclick="switchRateCat('medical')">Medical</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="rateChart" height="200"></canvas></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">All Categories Comparison</div><div class="panel-sub">RATE OF CHANGE — FOOD vs EDUCATION vs MEDICAL</div></div><div class="panel-badge">National</div></div>
+      <div class="chart-wrap"><canvas id="allRateChart" height="130"></canvas></div>
+    </div>
+  </div>
+
+  <!-- RATE EXPLORER -->
+  <div class="page" id="page-explorer">
+    <div class="section-title">Rate of Change Explorer</div>
+    <div class="section-sub">CENTRAL DIFFERENCE FORMULA — SELECT ANY REGION AND CATEGORY</div>
+    <div class="formula-box">
+      <span class="comment">// Central Difference Formula — applied to each interior income bracket</span><br>
+      f'(xᵢ) &nbsp;≈&nbsp; [ f(xᵢ₊₁) &minus; f(xᵢ₋₁) ] &nbsp;/&nbsp; ( 2h )&nbsp;&nbsp;&nbsp;&nbsp;where h = ( mid[i+1] &minus; mid[i-1] ) / 2
+    </div>
+    <div class="controls">
+      <select class="ctrl-select" id="explorerRegion" onchange="loadExplorer()">
+        <option value="national">National (All Philippines)</option>
+      </select>
+      <select class="ctrl-select" id="explorerCat" onchange="loadExplorer()">
+        <option value="food">Food Expenditure</option>
+        <option value="education">Education Expenditure</option>
+        <option value="medical">Medical Care</option>
+      </select>
+    </div>
+    <div class="grid-2">
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Expenditure Curve</div><div class="panel-sub">AVERAGE PER BRACKET</div></div></div><div class="chart-wrap"><canvas id="explorerCurve" height="220"></canvas></div></div>
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Rate of Change</div><div class="panel-sub">f'(xi) — INTERIOR BRACKETS ONLY</div></div></div><div class="chart-wrap"><canvas id="explorerRate" height="220"></canvas></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Computed Values Table</div><div class="panel-sub">BRACKET-BY-BRACKET RESULTS FROM PYTHON BACKEND</div></div></div>
+      <table class="rtable"><thead><tr><th>BRACKET</th><th>AVG EXP (₱)</th><th>RATE OF CHANGE (₱/₱1)</th><th>INTERPRETATION</th></tr></thead><tbody id="explorerTbody"></tbody></table>
+    </div>
+  </div>
+
+  <!-- BURDEN ANALYSIS -->
+  <div class="page" id="page-burden">
+    <div class="section-title">Cumulative Burden Analysis</div>
+    <div class="section-sub">TRAPEZOIDAL RULE — TOTAL AREA UNDER EXPENDITURE CURVE PER REGION</div>
+    <div class="formula-box">
+      <span class="comment">// Composite Trapezoidal Rule — non-uniform bracket spacing</span><br>
+      &int;f(x)dx &nbsp;&asymp;&nbsp; &sum; (h/2) &times; [ f(xⱼ) + f(xⱼ₊₁) ]&nbsp;&nbsp;&nbsp;&nbsp;for each segment j
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn active" id="burdBtnFood" onclick="switchBurden('food')">Food</button>
+      <button class="ctrl-btn" id="burdBtnEducation" onclick="switchBurden('education')">Education</button>
+      <button class="ctrl-btn" id="burdBtnMedical" onclick="switchBurden('medical')">Medical</button>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Regional Ranking</div><div class="panel-sub" id="burdenSub">FOOD — ALL 17 REGIONS SORTED</div></div><div class="panel-badge" id="burdenBadge">₱ Billions</div></div>
+      <div class="chart-wrap"><canvas id="burdenChart" height="300"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Full Comparison Table</div><div class="panel-sub">FOOD + EDUCATION + MEDICAL BURDEN PER REGION</div></div><a class="panel-badge" href="/api/export/csv" style="text-decoration:none;cursor:pointer">⬇ Export CSV</a></div>
+      <table class="rtable"><thead><tr><th>RANK</th><th>REGION</th><th>HOUSEHOLDS</th><th>FOOD (₱B)</th><th>EDUCATION (₱B)</th><th>MEDICAL (₱B)</th><th>FOOD BAR</th></tr></thead><tbody id="burdenTbody"></tbody></table>
+    </div>
+  </div>
+
+  <!-- REGIONAL PROFILE -->
+  <div class="page" id="page-regions">
+    <div class="section-title">Regional Profile</div>
+    <div class="section-sub">SELECT A REGION — DATA FETCHED FROM PYTHON API IN REAL TIME</div>
+    <div class="region-grid" id="regionGrid"></div>
+    <div id="regionProfile" style="display:none">
+      <div class="profile-card">
+        <div class="profile-name" id="profileName">—</div>
+        <div class="profile-meta" id="profileMeta">—</div>
+        <div class="profile-metrics" id="profileMetrics"></div>
+        <div class="grid-2">
+          <div><div class="chart-label">Expenditure Curves (All 3 Categories)</div><div class="chart-wrap"><canvas id="profileCurve" height="200"></canvas></div></div>
+          <div><div class="chart-label">Rate of Change (All 3 Categories)</div><div class="chart-wrap"><canvas id="profileRate" height="200"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIMULATOR -->
+  <div class="page" id="page-simulator">
+    <div class="section-title">Formula Simulator</div>
+    <div class="section-sub">ENTER CUSTOM VALUES — COMPUTED BY PYTHON BACKEND VIA API</div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Central Difference Formula</div><div class="panel-sub">CALLS /api/cdf</div></div></div>
+        <div class="formula-box" style="font-size:12px">f'(xᵢ) &asymp; [ f(xᵢ₊₁) &minus; f(xᵢ₋₁) ] / ( 2h )</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+          <div class="sim-input-group"><div class="sim-label">f(xi-1) PREV</div><input class="sim-input" id="c_prev" type="number" value="45358.03" oninput="runCDF()"/></div>
+          <div class="sim-input-group"><div class="sim-label">f(xi+1) NEXT</div><input class="sim-input" id="c_next" type="number" value="78434" oninput="runCDF()"/></div>
+          <div class="sim-input-group"><div class="sim-label">h STEP SIZE</div><input class="sim-input" id="c_h" type="number" value="50000" oninput="runCDF()"/></div>
+        </div>
+        <div class="sim-result"><div class="result-label">RATE OF CHANGE f'(xi)</div><div class="result-value" id="c_out">—</div><div class="result-sub" id="c_interp">Enter values to compute</div></div>
+        <div class="sim-label" style="margin:12px 0 6px">STEP-BY-STEP</div>
+        <div class="formula-box" style="font-size:12px;line-height:2" id="c_steps">—</div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Trapezoidal Rule</div><div class="panel-sub">CALLS /api/trapezoidal</div></div></div>
+        <div class="formula-box" style="font-size:12px">&int; &asymp; &sum; (h/2) &times; [ f(xⱼ) + f(xⱼ₊₁) ]</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div><div class="sim-label" style="margin-bottom:6px">EXPENDITURE VALUES (₱)</div>
+            <input class="sim-input" id="t_f0" type="number" value="22117.28" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
+            <input class="sim-input" id="t_f1" type="number" value="41669.86" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
+            <input class="sim-input" id="t_f2" type="number" value="61694.88" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
+            <input class="sim-input" id="t_f3" type="number" value="74355.46" oninput="runTrap()" style="width:100%"/>
+          </div>
+          <div><div class="sim-label" style="margin-bottom:6px">MIDPOINTS (₱)</div>
+            <input class="sim-input" id="t_m0" type="number" value="25000" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
+            <input class="sim-input" id="t_m1" type="number" value="75000" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
+            <input class="sim-input" id="t_m2" type="number" value="125000" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
+            <input class="sim-input" id="t_m3" type="number" value="175000" oninput="runTrap()" style="width:100%"/>
+          </div>
+        </div>
+        <div class="sim-result"><div class="result-label">∫f(x)dx — CUMULATIVE AREA</div><div class="result-value" id="t_out">—</div><div class="result-sub" id="t_interp">Enter values to compute</div></div>
+        <div class="sim-label" style="margin:12px 0 6px">STEP-BY-STEP</div>
+        <div class="formula-box" style="font-size:12px;line-height:2" id="t_steps">—</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Quick Load — Real FIES Presets</div><div class="panel-sub">LOADS ACTUAL VALUES FROM YOUR DATASET</div></div></div>
+      <div class="controls">
+        <button class="ctrl-btn" onclick="preset('food_nat')">National Food — 50K–100K</button>
+        <button class="ctrl-btn" onclick="preset('edu_nat')">National Edu — 300K–500K</button>
+        <button class="ctrl-btn" onclick="preset('med_nat')">National Med — 200K–300K</button>
+        <button class="ctrl-btn" onclick="preset('davao')">Davao Food — 4 brackets</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="page" id="page-export">
+    <div class="section-title">Export Data</div>
+    <div class="section-sub">DOWNLOAD COMPUTED RESULTS FROM THE PYTHON BACKEND</div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Cumulative Burden Results</div><div class="panel-sub">ALL 17 REGIONS — FOOD, EDUCATION, MEDICAL</div></div></div>
+        <p class="panel-text" style="margin-bottom:16px">Downloads a CSV file containing the Trapezoidal Rule results for all regions and all three expenditure categories, including household counts and mean income.</p>
+        <a href="/api/export/csv" class="btn-primary" style="display:inline-block;text-decoration:none">⬇ Download Burden CSV</a>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Rate of Change Results</div><div class="panel-sub">ALL 17 REGIONS — CENTRAL DIFFERENCE FORMULA</div></div></div>
+        <p class="panel-text" style="margin-bottom:16px">Downloads a CSV file containing the Central Difference Formula results per bracket for all regions and all three expenditure categories.</p>
+        <a href="/api/export/rates" class="btn-primary" style="display:inline-block;text-decoration:none">⬇ Download Rates CSV</a>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Live API Endpoints</div><div class="panel-sub">PYTHON FLASK BACKEND — ALL ROUTES</div></div></div>
+      <table class="rtable">
+        <thead><tr><th>METHOD</th><th>ENDPOINT</th><th>DESCRIPTION</th></tr></thead>
+        <tbody>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/summary</code></td><td>Dataset summary statistics</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/national</code></td><td>National expenditure averages and rates</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/regions</code></td><td>List of all 17 regions</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/region/&lt;name&gt;</code></td><td>Full profile for a specific region</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/burden?category=food</code></td><td>Ranked burden for a category</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/all_burdens</code></td><td>All burdens for all regions</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/cdf?f_prev=&f_next=&h=</code></td><td>Central Difference computation</td></tr>
+          <tr><td><span style="color:var(--amber)">POST</span></td><td><code>/api/trapezoidal</code></td><td>Trapezoidal Rule computation</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/export/csv</code></td><td>Download burden results CSV</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/export/rates</code></td><td>Download rate results CSV</td></tr>
+          <tr><td><span style="color:var(--green)">GET</span></td><td><code>/api/health</code></td><td>Server health check</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="page" id="page-about">
+    <div class="section-title">About the Study</div>
+    <div class="section-sub">RESEARCH BACKGROUND AND DOCUMENTATION</div>
+    <div class="about-grid">
+      <div class="about-card"><h3>Research Title</h3><p>Quantifying the Rate and Cumulative Burden of Household Expenditure Change Across Philippine Regions: A Numerical Methods Approach to the 2015 PSA FIES Dataset</p></div>
+      <div class="about-card"><h3>Course & Institution</h3><p>CS ELEC 01 — Computational Science for Computer Science<br><br>University of Southern Mindanao<br>College of Information and Computing Sciences<br>Academic Year 2024–2025</p></div>
+      <div class="about-card"><h3>Methodology</h3><p><strong style="color:var(--green)">Central Difference Formula</strong> — measures how fast expenditure changes per ₱1 income increase at each income bracket.<br><br><strong style="color:var(--green)">Trapezoidal Rule</strong> — computes cumulative expenditure burden accumulated across all income levels per region.<br><br>Both methods are implemented in Python and served via a Flask REST API.</p></div>
+      <div class="about-card"><h3>Research Team</h3><ul class="team-list"><li>Ma. Chriza Alenna P. Guleng</li><li>Ryzza Mae Rico</li><li>Hadnjinor M. Norjane</li></ul></div>
+      <div class="about-card" style="grid-column:1/-1"><h3>References</h3><ul class="ref-list"><li>Philippine Statistics Authority. (2017). Family Income and Expenditure Survey 2015 Final Report. PSA.</li><li>Paul, G. (2017). Filipino Family Income and Expenditure [Dataset]. Kaggle.</li><li>Burden, R. L., & Faires, J. D. (2011). Numerical Analysis (9th ed.). Brooks/Cole.</li><li>Engel, E. (1857). Die Productions- und Consumtionsverhältnisse des Königreichs Sachsen.</li><li>Chapra, S. C., & Canale, R. P. (2015). Numerical Methods for Engineers (7th ed.). McGraw-Hill.</li></ul></div>
+    </div>
+  </div>
+</main>
+
+<script src="/static/js/main.js"></script>
+</body>
+</html>
