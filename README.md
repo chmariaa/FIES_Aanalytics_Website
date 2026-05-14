@@ -15,20 +15,6 @@ fies_app/
 └── README.md                       ← This file
 ```
 
-### How to Run Locally
-```bash
-# 1. Install dependencies
-pip install -r requirements.txt
-
-# 2. Make sure the CSV is in the same folder as app.py
-
-# 3. Run the Flask server
-python app.py
-
-# 4. Open your browser at:
-http://localhost:5000
-```
-
 ### API Endpoints
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -43,14 +29,6 @@ http://localhost:5000
 | GET | /api/export/csv | Download burden CSV |
 | GET | /api/export/rates | Download rates CSV |
 | GET | /api/health | Server health check |
-
-### Deploy to Render (Free)
-1. Push this folder to a GitHub repository
-2. Go to https://render.com → New Web Service
-3. Connect your GitHub repo
-4. Set Build Command: `pip install -r requirements.txt`
-5. Set Start Command: `gunicorn app:app`
-6. Deploy — done!
 
 ### Numerical Methods Used
 - **Central Difference Formula**: f'(xi) ≈ [f(xi+1) - f(xi-1)] / (2h)
