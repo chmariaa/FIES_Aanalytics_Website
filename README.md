@@ -33,3 +33,5 @@ fies_app/
 ### Numerical Methods Used
 - **Central Difference Formula**: f'(xi) ≈ [f(xi+1) - f(xi-1)] / (2h)
 - **Trapezoidal Rule**: ∫f(x)dx ≈ Σ (h/2)[f(xj) + f(xj+1)]
+
+[FIES Analytics Website](https://fies-aanalytics-website-1.onrender.com/)
