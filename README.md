@@ -1,7 +1,7 @@
 # FIES Analytics — Philippine Income Inequality System
 ## CS ELEC 01 — Computational Science | University of Southern Mindanao
 
-## Guleng, Rico, Hadjinor
+### Guleng, Rico, Hadjinor
 
 ### Project Structure
 ```
@@ -38,3 +38,5 @@ fies_app/
 
 ## Live Website
 [FIES Analytics Website](https://fies-aanalytics-website-1.onrender.com/)
+
+## Concept Paper
