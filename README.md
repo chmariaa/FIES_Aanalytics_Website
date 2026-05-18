@@ -40,3 +40,4 @@ fies_app/
 [FIES Analytics Website](https://fies-aanalytics-website-1.onrender.com/)
 
 ## Concept Paper
+[Read my Research paper.docx](./FIES_Aanalytics_Website/Research%20paper.docx)
