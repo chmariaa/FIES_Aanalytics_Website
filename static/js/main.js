@@ -1,5 +1,3 @@
-// ── PARTICLES ─────────────────────────────────────────────────────────
-(function(){const c=document.getElementById('particles');for(let i=0;i<40;i++){const p=document.createElement('div');p.className='particle';p.style.cssText=`left:${Math.random()*100}%;animation-duration:${8+Math.random()*15}s;animation-delay:${Math.random()*10}s;--dx:${(Math.random()-.5)*200}px`;c.appendChild(p);}})();
 
 // ── CLOCK ─────────────────────────────────────────────────────────────
 setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-PH');},1000);
@@ -273,9 +271,15 @@ async function runCDF(){
   if([fp,fn,h].some(isNaN)||h===0)return;
   const d=await api(`/api/cdf?f_prev=${fp}&f_next=${fn}&h=${h}`);
   if(!d)return;
-  document.getElementById('c_out').textContent=d.rate.toFixed(6);
-  document.getElementById('c_interp').textContent=`For every ₱1 income increase, expenditure changes by ₱${d.rate.toFixed(4)}`;
-  document.getElementById('c_steps').innerHTML=`<span style="color:var(--dim)">// Numerator</span><br>f(xi+1) − f(xi−1) = ${fn.toLocaleString()} − ${fp.toLocaleString()} = ${d.numerator.toLocaleString()}<br><br><span style="color:var(--dim)">// Denominator</span><br>2h = 2 × ${h.toLocaleString()} = ${d.denominator.toLocaleString()}<br><br><span style="color:var(--dim)">// Result</span><br>f'(xi) = ${d.numerator} / ${d.denominator} = <strong style="color:var(--neon)">${d.rate.toFixed(6)}</strong>`;
+  document.getElementById('c_out').textContent='₱' + d.rate.toFixed(4);
+  document.getElementById('c_interp').textContent=`Meaning: for every ₱1.00 increase in income at this bracket, spending goes up by ₱${d.rate.toFixed(4)}.`;
+  document.getElementById('c_steps').innerHTML=
+    `<span style="color:var(--dim)">Step 1 — Subtract the lower bracket spending from the higher bracket spending:</span><br>`+
+    `${fn.toLocaleString()} − ${fp.toLocaleString()} = ${d.numerator.toLocaleString()}<br><br>`+
+    `<span style="color:var(--dim)">Step 2 — Multiply the income gap by 2:</span><br>`+
+    `2 × ${h.toLocaleString()} = ${d.denominator.toLocaleString()}<br><br>`+
+    `<span style="color:var(--dim)">Step 3 — Divide Step 1 by Step 2 to get the rate of change:</span><br>`+
+    `${d.numerator.toLocaleString()} ÷ ${d.denominator.toLocaleString()} = <strong style="color:var(--neon)">₱${d.rate.toFixed(4)} per ₱1 of income</strong>`;
 }
 
 async function runTrap(){
@@ -285,8 +289,8 @@ async function runTrap(){
   const d=await apiPost('/api/trapezoidal',{values:vals,midpoints:mids});
   if(!d||d.error)return;
   document.getElementById('t_out').textContent=`₱${d.total.toLocaleString('en-PH',{maximumFractionDigits:2})}`;
-  document.getElementById('t_interp').textContent='Total cumulative expenditure across these brackets';
-  document.getElementById('t_steps').innerHTML=d.segments.map((s,i)=>`Seg ${i+1}: (${s.h.toLocaleString()}/2)×(${s.f_j.toLocaleString()}+${s.f_j1.toLocaleString()}) = <strong style="color:var(--mint)">₱${s.area.toLocaleString()}</strong>`).join('<br>')+'<br><br><strong style="color:var(--neon)">Total = ₱'+d.total.toLocaleString('en-PH',{maximumFractionDigits:2})+'</strong>';
+  document.getElementById('t_interp').textContent='This is the total accumulated spending across all the income brackets you entered.';
+  document.getElementById('t_steps').innerHTML=d.segments.map((s,i)=>'<span style="color:var(--dim)">Bracket '+(i+1)+' to Bracket '+(i+2)+':</span>  '+'('+s.h.toLocaleString()+' ÷ 2) × (₱'+s.f_j.toLocaleString()+' + ₱'+s.f_j1.toLocaleString()+') = <strong style="color:var(--mint)">₱'+s.area.toLocaleString()+'</strong>').join('<br>')+'<br><br><strong style="color:var(--neon)">Total spending burden = ₱'+d.total.toLocaleString('en-PH',{maximumFractionDigits:2})+'</strong>';
 }
 
 function preset(p){
