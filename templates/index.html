@@ -182,54 +182,129 @@
   <!-- SIMULATOR -->
   <div class="page" id="page-simulator">
     <div class="section-title">Formula Simulator</div>
-    <div class="section-sub">ENTER CUSTOM VALUES - COMPUTED BY PYTHON BACKEND VIA API</div>
+    <div class="section-sub">TRY THE FORMULAS YOURSELF — USE THE PRESET BUTTONS BELOW TO AUTO-FILL REAL DATA FROM THE STUDY</div>
+
+    <!-- HOW TO USE GUIDE -->
+    <div class="panel" style="margin-bottom:16px;border-left:3px solid var(--green)">
+      <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:14px;margin-bottom:10px;color:var(--green)">💡 How to use this page</div>
+      <p style="color:var(--gray);font-size:13px;line-height:1.9;margin-bottom:8px">
+        This page lets you <strong style="color:var(--white)">test the two formulas used in this study</strong> using any values you want.
+        Not sure what to type? Just click one of the <strong style="color:var(--green)">Quick Load buttons at the bottom</strong> — they automatically fill in real data from the 2015 FIES dataset so you can see how the formulas work right away.
+      </p>
+      <p style="color:var(--gray);font-size:13px;line-height:1.9">
+        The computation is done by the <strong style="color:var(--white)">Python backend</strong> — the moment you change a value, the result updates instantly.
+      </p>
+    </div>
+
     <div class="grid-2">
+
+      <!-- CDF PANEL -->
       <div class="panel">
-        <div class="panel-header"><div><div class="panel-title">Central Difference Formula</div><div class="panel-sub">CALLS /api/cdf</div></div></div>
-        <div class="formula-box" style="font-size:12px">f'(xᵢ) &asymp; [ f(xᵢ₊₁) &minus; f(xᵢ₋₁) ] / ( 2h )</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
-          <div class="sim-input-group"><div class="sim-label">f(xi-1) PREV</div><input class="sim-input" id="c_prev" type="number" value="45358.03" oninput="runCDF()"/></div>
-          <div class="sim-input-group"><div class="sim-label">f(xi+1) NEXT</div><input class="sim-input" id="c_next" type="number" value="78434" oninput="runCDF()"/></div>
-          <div class="sim-input-group"><div class="sim-label">h STEP SIZE</div><input class="sim-input" id="c_h" type="number" value="50000" oninput="runCDF()"/></div>
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">How Fast Does Spending Change?</div>
+            <div class="panel-sub">CENTRAL DIFFERENCE FORMULA — RATE OF CHANGE</div>
+          </div>
         </div>
-        <div class="sim-result"><div class="result-label">RATE OF CHANGE f'(xi)</div><div class="result-value" id="c_out">-</div><div class="result-sub" id="c_interp">Enter values to compute</div></div>
-        <div class="sim-label" style="margin:12px 0 6px">STEP-BY-STEP</div>
-        <div class="formula-box" style="font-size:12px;line-height:2" id="c_steps">-</div>
+
+        <p style="color:var(--gray);font-size:13px;line-height:1.8;margin-bottom:14px">
+          This calculator answers: <strong style="color:var(--white)">"For every ₱1 increase in income, how much does spending go up?"</strong>
+          You need the average spending of the bracket <em>below</em> and the bracket <em>above</em> the one you are studying.
+        </p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+          <div class="sim-input-group">
+            <div class="sim-label">Average spending of the LOWER bracket (₱)</div>
+            <input class="sim-input" id="c_prev" type="number" value="45358.03" oninput="runCDF()" placeholder="e.g. 45358"/>
+            <div style="font-size:11px;color:var(--dim);margin-top:4px">Example: avg food spending at 50K–100K</div>
+          </div>
+          <div class="sim-input-group">
+            <div class="sim-label">Average spending of the HIGHER bracket (₱)</div>
+            <input class="sim-input" id="c_next" type="number" value="78434" oninput="runCDF()" placeholder="e.g. 78434"/>
+            <div style="font-size:11px;color:var(--dim);margin-top:4px">Example: avg food spending at 150K–200K</div>
+          </div>
+          <div class="sim-input-group">
+            <div class="sim-label">Income gap between the two brackets (₱)</div>
+            <input class="sim-input" id="c_h" type="number" value="50000" oninput="runCDF()" placeholder="e.g. 50000"/>
+            <div style="font-size:11px;color:var(--dim);margin-top:4px">Half the distance between bracket midpoints</div>
+          </div>
+        </div>
+
+        <div class="sim-result">
+          <div class="result-label">FOR EVERY ₱1 INCREASE IN INCOME, SPENDING CHANGES BY</div>
+          <div class="result-value" id="c_out">—</div>
+          <div class="result-sub" id="c_interp">Fill in the values above or click a Quick Load button</div>
+        </div>
+
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin:14px 0 6px">STEP-BY-STEP COMPUTATION</div>
+        <div class="formula-box" style="font-size:12px;line-height:2" id="c_steps">Results will appear here after you enter values above.</div>
       </div>
+
+      <!-- TRAPEZOIDAL PANEL -->
       <div class="panel">
-        <div class="panel-header"><div><div class="panel-title">Trapezoidal Rule</div><div class="panel-sub">CALLS /api/trapezoidal</div></div></div>
-        <div class="formula-box" style="font-size:12px">&int; &asymp; &sum; (h/2) &times; [ f(xⱼ) + f(xⱼ₊₁) ]</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-          <div><div class="sim-label" style="margin-bottom:6px">EXPENDITURE VALUES (₱)</div>
-            <input class="sim-input" id="t_f0" type="number" value="22117.28" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
-            <input class="sim-input" id="t_f1" type="number" value="41669.86" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
-            <input class="sim-input" id="t_f2" type="number" value="61694.88" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
-            <input class="sim-input" id="t_f3" type="number" value="74355.46" oninput="runTrap()" style="width:100%"/>
-          </div>
-          <div><div class="sim-label" style="margin-bottom:6px">MIDPOINTS (₱)</div>
-            <input class="sim-input" id="t_m0" type="number" value="25000" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
-            <input class="sim-input" id="t_m1" type="number" value="75000" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
-            <input class="sim-input" id="t_m2" type="number" value="125000" oninput="runTrap()" style="width:100%;margin-bottom:6px"/>
-            <input class="sim-input" id="t_m3" type="number" value="175000" oninput="runTrap()" style="width:100%"/>
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">What Is the Total Spending Burden?</div>
+            <div class="panel-sub">TRAPEZOIDAL RULE — CUMULATIVE EXPENDITURE</div>
           </div>
         </div>
-        <div class="sim-result"><div class="result-label">∫f(x)dx - CUMULATIVE AREA</div><div class="result-value" id="t_out">-</div><div class="result-sub" id="t_interp">Enter values to compute</div></div>
-        <div class="sim-label" style="margin:12px 0 6px">STEP-BY-STEP</div>
-        <div class="formula-box" style="font-size:12px;line-height:2" id="t_steps">-</div>
+
+        <p style="color:var(--gray);font-size:13px;line-height:1.8;margin-bottom:14px">
+          This calculator answers: <strong style="color:var(--white)">"Across multiple income levels, what is the total accumulated spending?"</strong>
+          Enter the average spending per bracket and the income midpoint of each bracket.
+        </p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+          <div>
+            <div class="sim-label" style="margin-bottom:6px">Average spending per bracket (₱)</div>
+            <div style="font-size:11px;color:var(--dim);margin-bottom:8px">Enter the average expenditure for each income bracket, from lowest to highest.</div>
+            <input class="sim-input" id="t_f0" type="number" value="22117.28" oninput="runTrap()" style="width:100%;margin-bottom:6px" placeholder="Bracket 1 avg spending"/>
+            <input class="sim-input" id="t_f1" type="number" value="41669.86" oninput="runTrap()" style="width:100%;margin-bottom:6px" placeholder="Bracket 2 avg spending"/>
+            <input class="sim-input" id="t_f2" type="number" value="61694.88" oninput="runTrap()" style="width:100%;margin-bottom:6px" placeholder="Bracket 3 avg spending"/>
+            <input class="sim-input" id="t_f3" type="number" value="74355.46" oninput="runTrap()" style="width:100%" placeholder="Bracket 4 avg spending"/>
+          </div>
+          <div>
+            <div class="sim-label" style="margin-bottom:6px">Middle income point of each bracket (₱)</div>
+            <div style="font-size:11px;color:var(--dim);margin-bottom:8px">The center value of each bracket — e.g. ₱25,000 for the 0–50K bracket.</div>
+            <input class="sim-input" id="t_m0" type="number" value="25000" oninput="runTrap()" style="width:100%;margin-bottom:6px" placeholder="e.g. 25000 for 0–50K"/>
+            <input class="sim-input" id="t_m1" type="number" value="75000" oninput="runTrap()" style="width:100%;margin-bottom:6px" placeholder="e.g. 75000 for 50K–100K"/>
+            <input class="sim-input" id="t_m2" type="number" value="125000" oninput="runTrap()" style="width:100%;margin-bottom:6px" placeholder="e.g. 125000 for 100K–150K"/>
+            <input class="sim-input" id="t_m3" type="number" value="175000" oninput="runTrap()" style="width:100%" placeholder="e.g. 175000 for 150K–200K"/>
+          </div>
+        </div>
+
+        <div class="sim-result">
+          <div class="result-label">TOTAL CUMULATIVE SPENDING BURDEN ACROSS THESE BRACKETS</div>
+          <div class="result-value" id="t_out">—</div>
+          <div class="result-sub" id="t_interp">Fill in the values above or click a Quick Load button</div>
+        </div>
+
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin:14px 0 6px">STEP-BY-STEP COMPUTATION</div>
+        <div class="formula-box" style="font-size:12px;line-height:2" id="t_steps">Results will appear here after you enter values above.</div>
       </div>
     </div>
+
+    <!-- QUICK LOAD -->
     <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Quick Load - Real FIES Presets</div><div class="panel-sub">LOADS ACTUAL VALUES FROM YOUR DATASET</div></div></div>
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Quick Load — Try Real Data from the Study</div>
+          <div class="panel-sub">CLICK ANY BUTTON TO AUTO-FILL WITH ACTUAL 2015 FIES VALUES</div>
+        </div>
+      </div>
+      <p style="color:var(--gray);font-size:13px;margin-bottom:14px">
+        Not sure what numbers to enter? Click any button below to automatically load real data from the study. The formulas will compute instantly so you can see a real example right away.
+      </p>
       <div class="controls">
-        <button class="ctrl-btn" onclick="preset('food_nat')">National Food - 50K–100K</button>
-        <button class="ctrl-btn" onclick="preset('edu_nat')">National Edu - 300K–500K</button>
-        <button class="ctrl-btn" onclick="preset('med_nat')">National Med - 200K–300K</button>
-        <button class="ctrl-btn" onclick="preset('davao')">Davao Food - 4 brackets</button>
+        <button class="ctrl-btn" onclick="preset('food_nat')">🍚 National Food Spending — 50K–100K Bracket</button>
+        <button class="ctrl-btn" onclick="preset('edu_nat')">🎓 National Education Spending — 300K–500K Bracket</button>
+        <button class="ctrl-btn" onclick="preset('med_nat')">🏥 National Medical Spending — 200K–300K Bracket</button>
+        <button class="ctrl-btn" onclick="preset('davao')">📍 Davao Region — Food Spending (4 Brackets)</button>
       </div>
     </div>
   </div>
 
-  <!-- EXPORT -->
+    <!-- EXPORT -->
   <div class="page" id="page-export">
     <div class="section-title">Export Data</div>
     <div class="section-sub">DOWNLOAD COMPUTED RESULTS FROM THE PYTHON BACKEND</div>
